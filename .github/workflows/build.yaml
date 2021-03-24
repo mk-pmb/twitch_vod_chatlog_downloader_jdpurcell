@@ -1,0 +1,32 @@
+%YAML 1.1
+# ^-- ATTN: [2019-12-31] If you use a later version, Github will fail
+#     with a bogus error message "You have an error in your yaml syntax".
+# -*- coding: UTF-8, tab-width: 4 -*-
+---
+
+on:
+    push:
+        branches:
+            -   '*'
+
+jobs:
+    job_msbuild:
+        runs-on: windows-latest
+        steps:
+            -   name: 'Check out the repo files'
+                uses: 'actions/checkout@v2'
+
+            -   name: 'Add msbuild to PATH'
+                uses: 'microsoft/setup-msbuild@v1.0.2'
+
+            -   name: 'Build it'
+                working-directory: './RechatTool'
+                run: 'msbuild RechatTool.csproj'
+
+            -   name: 'Upload build results as artifact'
+                uses: actions/upload-artifact@v1
+                with:
+                    name: rechat-tool
+                    path: RechatTool/bin/Debug/
+
+...
